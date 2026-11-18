@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Pencil, Plus, Trash2, Package } from 'lucide-react'
+import { FileSpreadsheet, Pencil, Plus, Trash2, Package } from 'lucide-react'
 import Img from '../components/Img'
 import { EmptyState, ErrorState, PageLoader } from '../components/States'
 import { useAsync } from '../hooks/useAsync'
@@ -18,7 +18,10 @@ export default function SellerProducts() {
     <div>
       <div className="mb-6 flex items-center justify-between gap-3">
         <h1 className="text-xl font-bold md:text-2xl">Mes produits</h1>
-        <Link to="/seller/products/new" className="btn-primary px-4 py-2.5 text-sm"><Plus size={16} /> Ajouter</Link>
+        <div className="flex items-center gap-2">
+          <Link to="/seller/products/import" className="btn-outline px-3 py-2.5 text-sm flex items-center gap-1.5"><FileSpreadsheet size={16} /> Import CSV</Link>
+          <Link to="/seller/products/new" className="btn-primary px-4 py-2.5 text-sm"><Plus size={16} /> Ajouter</Link>
+        </div>
       </div>
       {loading ? <PageLoader /> : error ? <ErrorState message={error} onRetry={reload} />
         : !data || data.length === 0 ? (

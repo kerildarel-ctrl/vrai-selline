@@ -30,6 +30,7 @@ import Info from './pages/Info'
 import SellerRegister from './pages/SellerRegister'
 import SellerDashboard from './pages/SellerDashboard'
 import SellerProducts from './pages/SellerProducts'
+import BulkImport from './pages/seller/BulkImport'
 import SellerProductForm from './pages/SellerProductForm'
 import SellerOrders from './pages/SellerOrders'
 import Favorites from './pages/Favorites'
@@ -97,6 +98,7 @@ export default function App() {
           <Route path="/seller" element={<SellerDashboard />} />
           <Route path="/seller/dashboard" element={<Navigate to="/seller" replace />} />
           <Route path="/seller/products" element={<SellerProducts />} />
+          <Route path="/seller/products/import" element={<BulkImport />} />
           <Route path="/seller/products/new" element={<SellerProductForm />} />
           <Route path="/seller/products/:id" element={<SellerProductForm />} />
           <Route path="/seller/orders" element={<SellerOrders />} />

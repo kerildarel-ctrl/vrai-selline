@@ -93,6 +93,48 @@ export function sellerRoutes({ db, config }) {
     res.status(201).json(await productById(db, id))
   })
 
+  // Import en masse (admin/vendeur uniquement) — jusqu'à 500 produits par appel
+  r.post('/seller/products/bulk', async (req, res) => {
+    const { z } = await import('zod')
+    const rowSchema = z.object({
+      name:         z.string().min(1).max(200),
+      description:  z.string().max(5000).optional().default(''),
+      price:        z.coerce.number().min(1).max(10_000_000),
+      stock:        z.coerce.number().int().min(0).max(100_000).default(1),
+      categoryId:   z.string().optional().nullable().default(null),
+      brand:        z.string().max(100).optional().default(''),
+      freeShipping: z.coerce.boolean().default(false),
+      shippingFee:  z.coerce.number().min(0).default(0),
+      images:       z.array(z.string().url()).max(5).default([]),
+    })
+    const rows = z.array(rowSchema).min(1).max(500).parse(req.body)
+    const shopId = req.user.shop.id
+    const created = []
+    const errors = []
+    for (let i = 0; i < rows.length; i++) {
+      try {
+        const b = rows[i]
+        if (b.categoryId) await checkCategory(b.categoryId)
+        const id = uid()
+        await db.transaction(async (tx) => {
+          await tx.run(
+            `INSERT INTO products (id, shop_id, category_id, name, brand, description, price, stock, free_shipping, shipping_fee, created_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+            [id, shopId, b.categoryId ?? null, b.name, b.brand || null, b.description || null,
+             b.price, b.stock, b.freeShipping, b.freeShipping ? 0 : b.shippingFee, now()]
+          )
+          for (let j = 0; j < b.images.length; j++) {
+            await tx.run('INSERT INTO product_images (product_id, url, position) VALUES ($1, $2, $3)', [id, b.images[j], j])
+          }
+        })
+        created.push(id)
+      } catch (e) {
+        errors.push({ row: i + 1, name: rows[i].name, error: e.message })
+      }
+    }
+    res.status(201).json({ created: created.length, errors })
+  })
+
   r.put('/seller/products/:id', async (req, res) => {
     const { id } = await ownProduct(req)
     const b = productSchema.parse(req.body)

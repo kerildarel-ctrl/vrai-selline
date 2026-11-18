@@ -147,6 +147,7 @@ export const api = {
   createProduct: (b: ProductInput) => post<Product>('/seller/products', b),
   updateProduct: (id: string, b: ProductInput) => put<Product>(`/seller/products/${id}`, b),
   deleteProduct: (id: string) => del<void>(`/seller/products/${id}`),
+  bulkImportProducts: (rows: unknown[]) => post<{ created: number; errors: { row: number; name: string; error: string }[] }>('/seller/products/bulk', rows),
   sellerOrders: () => get<SellerOrder[]>('/seller/orders'),
   updateOrderStatus: (id: string, status: OrderStatus) =>
     patch<SellerOrder>(`/seller/orders/${id}`, { status }),
