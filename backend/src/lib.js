@@ -23,9 +23,14 @@ export function startOfMonthWAT(date = new Date()) {
 
 /** Seules les images envoyées sur ce serveur sont acceptées (évite le pistage via des liens externes). */
 export function isOwnUploadUrl(config, url) {
+  // URL locale : /api/uploads/xxx
   const re = /^\/api\/uploads\/[\w.-]+$/
   if (re.test(url)) return true
-  return !!config.publicUrl && url.startsWith(`${config.publicUrl}/`) && re.test(url.slice(config.publicUrl.length))
+  // URL absolue locale
+  if (!!config.publicUrl && url.startsWith(`${config.publicUrl}/`) && re.test(url.slice(config.publicUrl.length))) return true
+  // URL Cloudinary
+  if (/^https:\/\/res\.cloudinary\.com\/[\w-]+\/image\/upload\/.+$/.test(url)) return true
+  return false
 }
 
 export function assertOwnImages(config, urls) {
