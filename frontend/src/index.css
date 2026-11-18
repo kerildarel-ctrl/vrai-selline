@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Reset & globals ─── */
+* { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+::selection { background: #FACC15; color: #0F172A; }
+
+body {
+  @apply font-sans antialiased text-selline-dark;
+  background: #F8FAFC;
+  min-height: 100dvh;
+  margin: 0;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { @apply rounded-full bg-slate-200; }
+::-webkit-scrollbar-thumb:hover { @apply bg-slate-300; }
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ─── Safe area ─── */
+.safe-pb { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* ─── Glass effects ─── */
+.glass {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+.glass-dark {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(8,12,20,0.80);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ─── Keyframes ─── */
+@keyframes shimmer    { 100% { transform: translateX(100%); } }
+@keyframes rise       { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+@keyframes fadeInUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes float      { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+@keyframes pulseSoft  { 0%,100%{opacity:1} 50%{opacity:.65} }
+@keyframes slideInLeft{ from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:none} }
+
+@layer components {
+
+  /* ─── Layout ─── */
+  .page      { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
+  .page-wide { @apply w-full px-3 sm:px-4 lg:px-6; }
+
+  /* ─── Buttons ─── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[15px] font-semibold
+           transition-all duration-150 active:scale-[0.97]
+           disabled:opacity-50 disabled:pointer-events-none
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-selline-yellow;
+  }
+  .btn-primary {
+    @apply btn bg-selline-yellow text-selline-dark
+           shadow-[0_4px_20px_rgba(250,204,21,0.35)]
+           hover:brightness-105 hover:shadow-[0_6px_28px_rgba(250,204,21,0.5)]
+           active:shadow-none;
+  }
+  .btn-secondary { @apply btn bg-selline-orange text-white shadow-sm hover:brightness-95; }
+  .btn-dark      { @apply btn bg-selline-dark  text-white hover:bg-selline-navy; }
+  .btn-outline   { @apply btn border-2 border-slate-200 bg-white text-selline-dark hover:border-slate-300 hover:bg-slate-50; }
+  .btn-whatsapp  { @apply btn text-white shadow-sm hover:brightness-95; background:#25D366; }
+  .btn-block     { @apply w-full; }
+
+  /* ─── Inputs ─── */
+  .input-field {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-selline-dark
+           placeholder:text-slate-400 transition-all
+           focus:outline-none focus:ring-4 focus:ring-selline-yellow/30 focus:border-selline-yellow;
+  }
+  .label { @apply mb-1.5 block text-sm font-medium text-selline-dark; }
+
+  /* ─── Cards & surfaces ─── */
+  .card {
+    @apply rounded-2xl bg-white ring-1 ring-slate-900/[0.06];
+    box-shadow: 0 1px 3px rgba(15,23,42,.04), 0 4px 20px rgba(15,23,42,.07);
+  }
+  .card:hover { box-shadow: 0 2px 6px rgba(15,23,42,.06), 0 12px 32px rgba(15,23,42,.1); }
+
+  /* ─── Badges ─── */
+  .badge-base { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold; }
+  .badge-new     { @apply badge-base bg-emerald-100 text-emerald-800; }
+  .badge-popular { @apply badge-base bg-amber-100 text-amber-800; }
+  .badge-rupture { @apply badge-base bg-slate-900 text-red-400; }
+
+  /* ─── Links ─── */
+  .link { @apply font-semibold text-teal-700 hover:text-teal-800 hover:underline underline-offset-2; }
+
+  /* ─── Category chips ─── */
+  .chip {
+    @apply inline-flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-1.5
+           text-sm font-medium text-slate-600 transition hover:border-slate-300 hover:bg-slate-50;
+  }
+  .chip-active { @apply border-selline-dark bg-selline-dark text-white hover:border-selline-dark hover:bg-selline-dark; }
+
+  /* ─── Skeleton loader ─── */
+  .skeleton { @apply relative overflow-hidden rounded-xl bg-slate-200/70; }
+  .skeleton::after {
+    content: '';
+    position: absolute; inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+    animation: shimmer 1.5s infinite;
+  }
+}

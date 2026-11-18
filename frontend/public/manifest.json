@@ -1,0 +1,13 @@
+{
+  "name": "Selline – Commerce Cameroun",
+  "short_name": "Selline",
+  "description": "Marketplace camerounais avec Mobile Money et vendeurs vérifiés",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0F172A",
+  "background_color": "#F1F5F9",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
