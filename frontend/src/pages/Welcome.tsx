@@ -7,125 +7,243 @@ export default function Welcome() {
   if (!loading && user) return <Navigate to="/home" replace />
 
   return (
-    <div className="flex min-h-screen w-full overflow-hidden bg-[#080c14] text-white">
+    <div className="flex min-h-screen w-full overflow-hidden bg-[#070b12] text-white">
 
-      {/* ─── PANNEAU GAUCHE ─── */}
+      {/* ─── PANNEAU GAUCHE (desktop) ─── */}
       <div className="relative hidden flex-1 flex-col overflow-hidden lg:flex">
-
-        {/* Blobs CSS */}
+        {/* Orbes animés */}
         <div aria-hidden className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-40 -left-40 h-[600px] w-[600px] rounded-full"
-            style={{ background: 'radial-gradient(circle, rgba(250,204,21,0.18) 0%, transparent 65%)' }} />
-          <div className="absolute top-1/3 -right-32 h-[500px] w-[500px] rounded-full"
-            style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.14) 0%, transparent 65%)' }} />
-          <div className="absolute -bottom-40 left-1/4 h-[400px] w-[400px] rounded-full"
-            style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 65%)' }} />
-          {/* Grille de points */}
-          <div className="absolute inset-0 opacity-[0.06]"
-            style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '36px 36px' }} />
-          {/* Diagonale décorative */}
-          <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+          <div className="orb orb-1" />
+          <div className="orb orb-2" />
+          <div className="orb orb-3" />
+          <div className="absolute inset-0 opacity-[0.04]"
+            style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+          <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-white/[0.06] to-transparent" />
         </div>
 
-        {/* Contenu gauche */}
         <div className="relative z-10 flex flex-1 flex-col justify-between p-12 xl:p-16">
           <Logo size="md" />
-
           <div>
-
-
-            <h1 className="text-5xl font-black leading-[1.08] tracking-tight text-white xl:text-6xl">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-white/50 backdrop-blur">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Disponible au Cameroun
+            </div>
+            <h1 className="text-5xl font-black leading-[1.07] tracking-tight text-white xl:text-6xl">
               La boutique<br />
               en ligne<br />
-              du Cameroun.
+              <span className="text-gradient">du Cameroun.</span>
             </h1>
-
-            <p className="mt-6 max-w-sm text-base leading-relaxed text-white/60">
+            <p className="mt-5 max-w-sm text-base leading-relaxed text-white/50">
               Achetez et vendez partout au Cameroun. Mobile Money, livraison rapide, vendeurs vérifiés.
             </p>
-
-            {/* Stats ligne */}
-            <div className="mt-10 flex items-center gap-8">
-              {[['500+', 'Boutiques'], ['48h', 'Livraison'], ['100%', 'Sécurisé']].map(([v, l]) => (
+            <div className="mt-10 flex items-center gap-10">
+              {[['500+', 'Boutiques'], ['48h', 'Livraison max'], ['100%', 'Sécurisé']].map(([v, l]) => (
                 <div key={l}>
                   <p className="text-2xl font-black text-white">{v}</p>
-                  <p className="text-xs font-medium text-white/40">{l}</p>
+                  <p className="mt-0.5 text-xs font-medium text-white/35">{l}</p>
                 </div>
               ))}
             </div>
           </div>
-
-          <p className="text-xs text-slate-700">© {new Date().getFullYear()} Selline</p>
+          <p className="text-xs text-white/[0.12]">© {new Date().getFullYear()} Selline</p>
         </div>
       </div>
 
-      {/* ─── PANNEAU DROIT ─── */}
-      <div className="relative flex w-full flex-col items-center justify-center bg-[#0d1120] px-8 py-12 lg:w-[420px] lg:shrink-0 xl:w-[480px]">
+      {/* ─── PANNEAU DROIT / MOBILE ─── */}
+      <div className="relative flex w-full flex-col items-center justify-center overflow-hidden px-6 py-12 lg:w-[440px] lg:shrink-0 xl:w-[480px]">
 
+        {/* Fond mobile : orbes */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden">
+          <div className="orb orb-1" style={{ opacity: .5 }} />
+          <div className="orb orb-2" style={{ opacity: .4 }} />
+        </div>
 
-        <div className="relative z-10 w-full max-w-sm">
-          {/* Logo + nom mis en exergue */}
-          <div className="mb-10 flex flex-col items-center gap-2">
-            <Logo size="lg" />
-            <h2 className="text-2xl font-black tracking-tight text-white">selline</h2>
-            <p className="text-sm text-white/40">Rejoignez la communauté Selline</p>
+        {/* Ligne séparatrice gauche (desktop) */}
+        <div className="absolute inset-y-0 left-0 hidden w-px bg-gradient-to-b from-transparent via-white/[0.05] to-transparent lg:block" />
+
+        <div className="relative z-10 w-full max-w-sm space-y-welcome">
+
+          {/* Logo */}
+          <div className="flex flex-col items-center gap-3 welcome-item">
+            <div className="logo-ring">
+              <Logo size="lg" />
+            </div>
+            <div className="text-center">
+              <h2 className="text-[22px] font-black tracking-tight text-white">Selline</h2>
+              <p className="mt-1 text-sm text-white/35">La marketplace du Cameroun</p>
+            </div>
           </div>
 
           {/* Boutons */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3 welcome-item">
+            {/* Créer compte — blanc premium */}
             <Link
               to="/register"
-              className="group relative w-full overflow-hidden rounded-2xl py-4 text-center text-[15px] font-bold text-selline-dark shadow-xl shadow-selline-yellow/20 transition duration-300 hover:shadow-selline-yellow/40"
-              style={{ background: 'linear-gradient(135deg, #FACC15 0%, #F59E0B 100%)' }}
+              className="btn-welcome-primary group relative overflow-hidden"
             >
-              <span className="relative z-10">Créer un compte</span>
-              <div className="absolute inset-0 translate-y-full bg-white/20 transition duration-300 group-hover:translate-y-0" />
+              <span className="relative z-10 font-bold text-[#070b12]">Créer un compte</span>
+              <div className="btn-shine" />
             </Link>
 
+            {/* Se connecter — verre sombre */}
             <Link
               to="/login"
-              className="w-full rounded-2xl border border-white/10 bg-white/[0.04] py-4 text-center text-[15px] font-semibold text-white backdrop-blur transition duration-300 hover:border-white/25 hover:bg-white/[0.08]"
+              className="btn-welcome-secondary"
             >
-              Se connecter
+              <span className="font-semibold text-white">Se connecter</span>
             </Link>
           </div>
 
           {/* Séparateur */}
-          <div className="my-8 flex items-center gap-3">
-            <div className="h-px flex-1 bg-white/[0.07]" />
-            <span className="text-xs text-slate-600">ou</span>
-            <div className="h-px flex-1 bg-white/[0.07]" />
+          <div className="flex items-center gap-4 welcome-item">
+            <div className="h-px flex-1 bg-white/[0.06]" />
+            <span className="text-xs text-white/25">ou</span>
+            <div className="h-px flex-1 bg-white/[0.06]" />
           </div>
 
           {/* Parcourir */}
           <Link
             to="/home"
-            className="flex w-full items-center justify-center rounded-2xl border border-white/[0.06] py-3.5 text-sm font-medium text-slate-400 transition hover:border-white/15 hover:text-white"
+            className="welcome-item flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm text-white/35 transition duration-300 hover:text-white/70"
           >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             Parcourir les produits
           </Link>
 
-          <p className="mt-8 text-center text-xs text-slate-700">
+          <p className="welcome-item text-center text-[11px] text-white/[0.18]">
             En continuant, vous acceptez nos{' '}
-            <Link to="/terms" className="text-slate-500 hover:text-slate-300 transition">conditions d'utilisation</Link>
+            <Link to="/terms" className="text-white/35 underline-offset-2 hover:text-white/60 transition hover:underline">conditions d'utilisation</Link>
           </p>
         </div>
       </div>
 
       <style>{`
-        @keyframes fadeSlide {
-          from { opacity: 0; transform: translateY(18px); }
-          to   { opacity: 1; transform: translateY(0); }
+        /* Gradient texte */
+        .text-gradient {
+          background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
-        .relative.z-10.w-full.max-w-sm > * {
-          animation: fadeSlide .45s ease both;
+
+        /* Orbes flottants */
+        .orb {
+          position: absolute;
+          border-radius: 9999px;
+          filter: blur(80px);
+          pointer-events: none;
         }
-        .relative.z-10.w-full.max-w-sm > *:nth-child(1) { animation-delay: .05s; }
-        .relative.z-10.w-full.max-w-sm > *:nth-child(2) { animation-delay: .12s; }
-        .relative.z-10.w-full.max-w-sm > *:nth-child(3) { animation-delay: .19s; }
-        .relative.z-10.w-full.max-w-sm > *:nth-child(4) { animation-delay: .26s; }
-        .relative.z-10.w-full.max-w-sm > *:nth-child(5) { animation-delay: .32s; }
-        .relative.z-10.w-full.max-w-sm > *:nth-child(6) { animation-delay: .38s; }
+        .orb-1 {
+          width: 520px; height: 520px;
+          top: -160px; left: -160px;
+          background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 65%);
+          animation: drift1 18s ease-in-out infinite alternate;
+        }
+        .orb-2 {
+          width: 420px; height: 420px;
+          bottom: -100px; right: -100px;
+          background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 65%);
+          animation: drift2 22s ease-in-out infinite alternate;
+        }
+        .orb-3 {
+          width: 350px; height: 350px;
+          top: 40%; left: 30%;
+          background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 65%);
+          animation: drift1 15s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes drift1 {
+          from { transform: translate(0, 0) scale(1); }
+          to   { transform: translate(40px, 30px) scale(1.08); }
+        }
+        @keyframes drift2 {
+          from { transform: translate(0, 0) scale(1); }
+          to   { transform: translate(-30px, -40px) scale(1.05); }
+        }
+
+        /* Logo ring glow */
+        .logo-ring {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 24px;
+          padding: 2px;
+          background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+          box-shadow: 0 0 40px rgba(99,102,241,0.15), inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+        /* Bouton primaire */
+        .btn-welcome-primary {
+          display: flex;
+          width: 100%;
+          align-items: center;
+          justify-content: center;
+          border-radius: 16px;
+          padding: 15px 24px;
+          background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+          box-shadow: 0 4px 32px rgba(255,255,255,0.08), 0 1px 0 rgba(255,255,255,0.3) inset;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          text-decoration: none;
+        }
+        .btn-welcome-primary:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 8px 40px rgba(255,255,255,0.14), 0 1px 0 rgba(255,255,255,0.3) inset;
+        }
+        .btn-welcome-primary:active { transform: translateY(0) scale(0.98); }
+
+        /* Effet shimmer */
+        .btn-shine {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.4) 50%, transparent 60%);
+          background-size: 200% 100%;
+          background-position: -100% 0;
+          border-radius: 16px;
+          transition: background-position 0s;
+        }
+        .btn-welcome-primary:hover .btn-shine {
+          animation: shine 0.5s ease forwards;
+        }
+        @keyframes shine {
+          from { background-position: -100% 0; }
+          to   { background-position: 200% 0; }
+        }
+
+        /* Bouton secondaire */
+        .btn-welcome-secondary {
+          display: flex;
+          width: 100%;
+          align-items: center;
+          justify-content: center;
+          border-radius: 16px;
+          padding: 15px 24px;
+          border: 1px solid rgba(255,255,255,0.08);
+          background: rgba(255,255,255,0.03);
+          backdrop-filter: blur(12px);
+          text-decoration: none;
+          transition: border-color 0.2s, background 0.2s, transform 0.2s;
+        }
+        .btn-welcome-secondary:hover {
+          border-color: rgba(255,255,255,0.18);
+          background: rgba(255,255,255,0.06);
+          transform: translateY(-1px);
+        }
+        .btn-welcome-secondary:active { transform: translateY(0) scale(0.98); }
+
+        /* Entrées */
+        .space-y-welcome { display: flex; flex-direction: column; gap: 28px; }
+        .welcome-item {
+          animation: welcomeIn 0.5s cubic-bezier(.22,.68,0,1.2) both;
+        }
+        .welcome-item:nth-child(1) { animation-delay: 0.05s; }
+        .welcome-item:nth-child(2) { animation-delay: 0.13s; }
+        .welcome-item:nth-child(3) { animation-delay: 0.20s; }
+        .welcome-item:nth-child(4) { animation-delay: 0.27s; }
+        .welcome-item:nth-child(5) { animation-delay: 0.33s; }
+        @keyframes welcomeIn {
+          from { opacity: 0; transform: translateY(20px) scale(0.97); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
       `}</style>
     </div>
   )
