@@ -86,7 +86,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-400 truncate">
           {product.shop.name}
           {product.shop.verified && (
-            <BadgeCheck size={13} className="shrink-0 text-teal-500" title="Boutique vérifiée" />
+            <BadgeCheck size={13} className="shrink-0 text-teal-500" aria-label="Boutique vérifiée" />
           )}
         </p>
 

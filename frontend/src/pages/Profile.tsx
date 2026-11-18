@@ -39,7 +39,7 @@ export default function Profile() {
               <h2 className="flex items-center gap-1.5 truncate text-lg font-bold">
                 {user.firstName} {user.lastName}
                 {user.shop?.verified && (
-                  <BadgeCheck size={18} className="shrink-0 text-teal-500" title="Boutique vérifiée" />
+                  <BadgeCheck size={18} className="shrink-0 text-teal-500" aria-label="Boutique vérifiée" />
                 )}
               </h2>
               <p className="truncate text-sm text-slate-500">{user.email}</p>

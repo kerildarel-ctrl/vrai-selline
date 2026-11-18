@@ -26,7 +26,7 @@ export default function SellerDashboard() {
           <p className="flex items-center gap-1.5 truncate text-sm text-slate-500">
             {user?.shop?.name}
             {user?.shop?.verified && (
-              <BadgeCheck size={16} className="shrink-0 text-teal-500" title="Boutique vérifiée" />
+              <BadgeCheck size={16} className="shrink-0 text-teal-500" aria-label="Boutique vérifiée" />
             )}
           </p>
         </div>
