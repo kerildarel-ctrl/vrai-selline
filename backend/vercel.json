@@ -13,5 +13,10 @@
         { "key": "Access-Control-Allow-Credentials", "value": "true" }
       ]
     }
-  ]
+  ],
+  "env": {
+    "CORS_ORIGINS": "https://selline-cm.vercel.app",
+    "FRONTEND_URL": "https://selline-cm.vercel.app",
+    "NODE_ENV": "production"
+  }
 }
