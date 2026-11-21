@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom'
-import { Bell, Heart, MapPin, MessageCircle, Search, ShieldCheck, ShoppingCart, Smartphone, Store, Tag, Utensils, User as UserIcon, Shirt, Home as HomeIcon, Sparkles, Monitor } from 'lucide-react'
+import { Bell, Heart, MapPin, MessageCircle, Moon, Search, ShieldCheck, ShoppingCart, Smartphone, Store, Sun, Tag, Utensils, User as UserIcon, Shirt, Home as HomeIcon, Sparkles, Monitor } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import Logo from './Logo'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { useCounters } from '../context/CountersContext'
 import { useCategories } from '../hooks/useCategories'
+import { useTheme } from '../context/ThemeContext'
 import Avatar from './Avatar'
 
 const categoryIconMap: Record<string, LucideIcon> = {
@@ -70,6 +71,7 @@ export default function Header({ hideOnMobile = false }: { hideOnMobile?: boolea
   const { count } = useCart()
   const { categories } = useCategories()
   const { counters } = useCounters()
+  const { theme, toggle } = useTheme()
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -142,6 +144,14 @@ export default function Header({ hideOnMobile = false }: { hideOnMobile?: boolea
                 <Link to="/login" className="rounded-full p-2 md:hidden" aria-label="Connexion"><UserIcon size={22} /></Link>
               </>
             )}
+            {/* Toggle dark mode */}
+            <button
+              onClick={toggle}
+              aria-label={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
+              className="relative rounded-full p-2 transition hover:bg-white/10"
+            >
+              {theme === 'dark' ? <Sun size={20} className="text-selline-yellow" /> : <Moon size={20} />}
+            </button>
             {cart}
           </div>
         </div>

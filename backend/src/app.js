@@ -10,6 +10,7 @@ import { sellerRoutes, shopRoutes } from './routes/seller.js'
 import { messageRoutes, notificationRoutes } from './routes/messages.js'
 import { uploadRoutes } from './routes/uploads.js'
 import { adminRoutes } from './routes/admin.js'
+import promosRouter from './routes/promos.js'
 import { errorHandler, notFound, requireAdmin, requireAuth } from './middleware.js'
 
 export function createApp({ db, config, rateLimits = true }) {
@@ -46,6 +47,7 @@ export function createApp({ db, config, rateLimits = true }) {
 
   // Public
   api.use(publicCatalogRoutes(ctx))
+  api.use('/promos', promosRouter(db))
 
   // Connecté
   api.use(auth)

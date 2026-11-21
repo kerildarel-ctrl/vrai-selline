@@ -1,25 +1,26 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard, { ProductGrid, ProductGridSkeleton } from '../components/ProductCard'
 import Carousel from '../components/Carousel'
+import HeroBanner from '../components/HeroBanner'
 import Img from '../components/Img'
 import { EmptyState, ErrorState } from '../components/States'
 import { useAsync } from '../hooks/useAsync'
 import { useCategories } from '../hooks/useCategories'
+import { useRecentlyViewed } from '../hooks/useRecentlyViewed'
 import { api } from '../lib/api'
 import type { Category, Product } from '../lib/types'
-import { ArrowRight, Package, Sparkles, Tag, Truck } from 'lucide-react'
+import { ArrowRight, Clock, Package, Sparkles, Tag, Truck } from 'lucide-react'
 
-const tileH = 'h-64 sm:h-72 lg:h-[22rem]'
+const tileH = 'h-56 sm:h-64 lg:h-[20rem]'
 
 const TABS = [
-  { key: 'popular',      label: 'Populaires',       icon: Sparkles, sort: 'popular'  },
-  { key: 'newest',       label: 'Nouveautés',        icon: Tag,      sort: 'newest'   },
-  { key: 'free',         label: 'Livraison offerte', icon: Truck,    sort: 'popular'  },
+  { key: 'popular',  label: 'Populaires',       icon: Sparkles, sort: 'popular' },
+  { key: 'newest',   label: 'Nouveautés',        icon: Tag,      sort: 'newest'  },
+  { key: 'free',     label: 'Livraison offerte', icon: Truck,    sort: 'popular' },
 ] as const
 type TabKey = typeof TABS[number]['key']
 
-/** Grande tuile catégorie */
 function CategoryTile({ category, image, className = '' }: { category: Category; image?: string; className?: string }) {
   return (
     <Link
@@ -27,7 +28,7 @@ function CategoryTile({ category, image, className = '' }: { category: Category;
       className={`group relative overflow-hidden rounded-2xl bg-slate-800 ${tileH} ${className}`}
     >
       <Img src={image} alt={category.name} className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-110 opacity-70" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 p-4">
         <h2 className="text-lg font-bold text-white drop-shadow-sm">{category.name}</h2>
         <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-white/80">
@@ -38,11 +39,10 @@ function CategoryTile({ category, image, className = '' }: { category: Category;
   )
 }
 
-/** Carte catégorie dans le carousel */
 function CategoryCard({ category, items }: { category: Category; items: Product[] }) {
   const shown = items.slice(0, 4)
   return (
-    <div className="flex w-60 shrink-0 snap-start flex-col rounded-2xl bg-white p-4 ring-1 ring-slate-900/[0.06] sm:w-72" style={{ boxShadow:'0 1px 3px rgba(15,23,42,.04),0 4px 20px rgba(15,23,42,.07)' }}>
+    <div className="flex w-56 shrink-0 snap-start flex-col rounded-2xl bg-white p-4 ring-1 ring-slate-900/[0.06] sm:w-64" style={{ boxShadow: '0 1px 3px rgba(15,23,42,.04),0 4px 20px rgba(15,23,42,.07)' }}>
       <h3 className="text-[15px] font-bold">{category.name}</h3>
       <Link to={`/products?category=${category.id}`} className={`mt-3 grid flex-1 gap-2 ${shown.length <= 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
         {shown.map((p) => (
@@ -56,10 +56,39 @@ function CategoryCard({ category, items }: { category: Category; items: Product[
           </div>
         )}
       </Link>
-      <Link to={`/products?category=${category.id}`} className="link mt-3 text-xs">
-        Voir tout
-      </Link>
+      <Link to={`/products?category=${category.id}`} className="link mt-3 text-xs">Voir tout</Link>
     </div>
+  )
+}
+
+function RecentlyViewedSection() {
+  const { getIds } = useRecentlyViewed()
+  const [products, setProducts] = useState<Product[]>([])
+
+  useEffect(() => {
+    const ids = getIds()
+    if (!ids.length) return
+    Promise.all(ids.slice(0, 8).map(id => api.product(id).catch(() => null)))
+      .then(res => setProducts(res.filter(Boolean) as Product[]))
+  }, [])
+
+  if (!products.length) return null
+
+  return (
+    <section>
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="flex items-center gap-2 text-lg font-bold">
+          <Clock size={18} className="text-selline-yellow" /> Vu récemment
+        </h2>
+      </div>
+      <Carousel>
+        {products.map(p => (
+          <div key={p.id} className="w-40 shrink-0 snap-start sm:w-52">
+            <ProductCard product={p} />
+          </div>
+        ))}
+      </Carousel>
+    </section>
   )
 }
 
@@ -76,22 +105,19 @@ export default function Home() {
     newest:   { loading: newest.loading,   error: newest.error,   items: newest.data?.items   ?? [] },
     free:     { loading: freeship.loading, error: freeship.error, items: freeship.data?.items ?? [] },
   }
-
   const current = tabData[activeTab]
-
-  // Pour les tuiles catégories, on prend les produits populaires
   const allTop = popular.data?.items ?? []
-  const byCategory = categories.map((c) => ({
-    category: c,
-    items: allTop.filter((p) => p.category?.id === c.id),
-  }))
-  const tiles = byCategory.filter((x) => x.items.length > 0).slice(0, 3)
+  const byCategory = categories.map(c => ({ category: c, items: allTop.filter(p => p.category?.id === c.id) }))
+  const tiles = byCategory.filter(x => x.items.length > 0).slice(0, 3)
 
   return (
     <div className="relative">
       <div aria-hidden className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-selline-navy/60 to-transparent" />
 
       <div className="page-wide relative space-y-6 pb-12 pt-4">
+
+        {/* Hero Banner */}
+        <HeroBanner />
 
         {/* Tuiles catégories */}
         {(popular.loading || tiles.length > 0) && (
@@ -104,6 +130,9 @@ export default function Home() {
           </div>
         )}
 
+        {/* Vu récemment */}
+        <RecentlyViewedSection />
+
         {/* Carousel catégories */}
         {byCategory.length > 0 && (
           <section>
@@ -114,9 +143,8 @@ export default function Home() {
           </section>
         )}
 
-        {/* Onglets filtres */}
+        {/* Onglets */}
         <section className="card overflow-hidden">
-          {/* Tabs */}
           <div className="flex border-b border-slate-100">
             {TABS.map(({ key, label, icon: Icon }) => (
               <button
@@ -134,27 +162,22 @@ export default function Home() {
               </button>
             ))}
           </div>
-
-          {/* Contenu de l'onglet */}
           <div className="p-4">
             {current.error && <ErrorState message={current.error} />}
-
             {current.loading ? (
               <ProductGridSkeleton count={8} />
             ) : current.items.length === 0 ? (
               <EmptyState
                 icon={<Package size={28} />}
                 title="Aucun produit"
-                text={activeTab === 'free' ? 'Aucun produit avec livraison offerte pour le moment.' : 'Aucun produit disponible.'}
+                text={activeTab === 'free' ? 'Aucun produit avec livraison offerte.' : 'Aucun produit disponible.'}
                 action={<Link to="/products" className="btn-primary">Parcourir tout</Link>}
               />
             ) : (
               <ProductGrid>
-                {current.items.map((p) => <ProductCard key={p.id} product={p} />)}
+                {current.items.map(p => <ProductCard key={p.id} product={p} />)}
               </ProductGrid>
             )}
-
-            {/* Voir plus */}
             {current.items.length > 0 && (
               <div className="mt-5 text-center">
                 <Link

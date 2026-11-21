@@ -1,0 +1,20 @@
+{
+  "name": "Selline – Marketplace Cameroun",
+  "short_name": "Selline",
+  "description": "Achetez et vendez partout au Cameroun",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070b12",
+  "theme_color": "#0F172A",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["shopping", "lifestyle"],
+  "lang": "fr",
+  "shortcuts": [
+    { "name": "Accueil", "url": "/home", "description": "Voir les produits" },
+    { "name": "Mes commandes", "url": "/orders", "description": "Suivre mes commandes" }
+  ]
+}

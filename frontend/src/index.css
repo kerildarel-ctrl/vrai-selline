@@ -113,3 +113,65 @@ body {
     animation: shimmer 1.5s infinite;
   }
 }
+
+/* ════════════════ DARK MODE ════════════════ */
+html.dark body {
+  background: #0a0f1a;
+  color: #e2e8f0;
+}
+html.dark .card {
+  background: #111827;
+  box-shadow: 0 1px 3px rgba(0,0,0,.3), 0 4px 20px rgba(0,0,0,.4);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+html.dark .card:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.5);
+}
+html.dark .input-field {
+  background: #1e293b;
+  border-color: rgba(255,255,255,0.1);
+  color: #e2e8f0;
+}
+html.dark .input-field:focus {
+  border-color: #facc15;
+  background: #1e2d40;
+}
+html.dark .input-field::placeholder { color: #64748b; }
+html.dark .chip {
+  background: #1e293b;
+  border-color: rgba(255,255,255,0.08);
+  color: #94a3b8;
+}
+html.dark .chip:hover { background: #263548; border-color: rgba(255,255,255,0.15); }
+html.dark .chip-active {
+  background: #0f172a;
+  border-color: #e2e8f0;
+  color: #e2e8f0;
+}
+html.dark .btn-outline {
+  background: #1e293b;
+  border-color: rgba(255,255,255,0.12);
+  color: #e2e8f0;
+}
+html.dark .btn-outline:hover { background: #263548; border-color: rgba(255,255,255,0.2); }
+html.dark .skeleton { background: rgba(255,255,255,0.07); }
+html.dark .skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
+}
+html.dark .glass {
+  background: rgba(17,24,39,0.85);
+  border-color: rgba(255,255,255,0.08);
+}
+html.dark ::-webkit-scrollbar-thumb { background: #334155; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+/* Text adjustments */
+html.dark .text-slate-600 { color: #94a3b8 !important; }
+html.dark .text-slate-500 { color: #64748b !important; }
+html.dark .text-selline-dark { color: #e2e8f0 !important; }
+html.dark .bg-slate-50 { background-color: #1e293b !important; }
+html.dark .bg-white { background-color: #111827 !important; }
+html.dark .border-slate-100 { border-color: rgba(255,255,255,0.06) !important; }
+html.dark .border-slate-200 { border-color: rgba(255,255,255,0.08) !important; }
+html.dark .bg-yellow-50 { background-color: rgba(250,204,21,0.08) !important; }
+html.dark .ring-slate-900\/\[0\.06\] { --tw-ring-color: rgba(255,255,255,0.05) !important; }
+

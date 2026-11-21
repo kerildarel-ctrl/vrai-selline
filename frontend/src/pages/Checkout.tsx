@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { CreditCard, MapPin, Plus, Smartphone, Wallet } from 'lucide-react'
+import { CreditCard, MapPin, Plus, Smartphone, Tag, Wallet } from 'lucide-react'
 import Field from '../components/Field'
 import Img from '../components/Img'
 import PageHeader from '../components/PageHeader'
@@ -31,6 +31,10 @@ export default function Checkout() {
   const [newAddr, setNewAddr] = useState({ fullName: user ? `${user.firstName} ${user.lastName}` : '', phone: user?.phone ?? '', city: user?.city ?? '', quarter: '', details: '' })
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const [promoCode, setPromoCode] = useState('')
+  const [promoApplied, setPromoApplied] = useState<{ code: string; discount: number; label: string } | null>(null)
+  const [promoLoading, setPromoLoading] = useState(false)
+  const [promoError, setPromoError] = useState('')
 
   useEffect(() => {
     if (addresses && addresses.length > 0 && !addressId) setAddressId(addresses[0].id)
@@ -52,6 +56,26 @@ export default function Checkout() {
     finally { setBusy(false) }
   }
 
+  const applyPromo = async () => {
+    if (!promoCode.trim()) return
+    setPromoLoading(true); setPromoError('')
+    try {
+      const res = await fetch(`/api/promos/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: promoCode.trim().toUpperCase(), total })
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Code invalide')
+      setPromoApplied({ code: data.code, discount: data.discount, label: data.label })
+    } catch (err) {
+      setPromoError(err instanceof Error ? err.message : 'Code invalide')
+      setPromoApplied(null)
+    } finally { setPromoLoading(false) }
+  }
+
+  const finalTotal = promoApplied ? Math.max(0, total - promoApplied.discount) : total
+
   const confirm = async () => {
     if (!addressId) { setError('Choisissez une adresse de livraison.'); return }
     if (payment === 'mobile' && !payPhone.trim()) { setError('Indiquez le numéro Mobile Money.'); return }
@@ -62,6 +86,7 @@ export default function Checkout() {
         addressId,
         paymentMethod: payment,
         paymentPhone: payment === 'mobile' ? payPhone.trim() : undefined,
+        promoCode: promoApplied?.code,
       })
       clear()
       navigate('/order-success', { replace: true, state: { reference: order.reference, orderId: order.id } })
@@ -147,7 +172,40 @@ export default function Checkout() {
               <div className="space-y-2 border-t border-slate-100 pt-3">
                 <div className="flex justify-between text-sm"><span className="text-slate-500">Sous-total</span><span>{formatPrice(subtotal)}</span></div>
                 <div className="flex justify-between text-sm"><span className="text-slate-500">Livraison</span>{shipping === 0 ? <span className="text-emerald-600">Gratuite</span> : <span>{formatPrice(shipping)}</span>}</div>
-                <div className="flex justify-between border-t border-slate-100 pt-3 text-lg font-bold"><span>Total</span><span>{formatPrice(total)}</span></div>
+                {promoApplied && (
+                  <div className="flex justify-between text-sm text-emerald-600 font-semibold">
+                    <span>🎉 {promoApplied.label}</span>
+                    <span>-{formatPrice(promoApplied.discount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between border-t border-slate-100 pt-3 text-lg font-bold">
+                  <span>Total</span><span>{formatPrice(finalTotal)}</span>
+                </div>
+              </div>
+
+              {/* Code promo */}
+              <div className="border-t border-slate-100 pt-3">
+                <p className="mb-2 text-xs font-semibold text-slate-500 flex items-center gap-1"><Tag size={12}/> Code promo</p>
+                {promoApplied ? (
+                  <div className="flex items-center justify-between rounded-xl bg-emerald-50 px-3 py-2 text-sm">
+                    <span className="font-bold text-emerald-700">✓ {promoApplied.code}</span>
+                    <button onClick={() => { setPromoApplied(null); setPromoCode('') }} className="text-xs text-slate-400 hover:text-red-500">Retirer</button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <input
+                      value={promoCode}
+                      onChange={e => { setPromoCode(e.target.value.toUpperCase()); setPromoError('') }}
+                      placeholder="Ex: SELLINE10"
+                      className="input-field flex-1 py-2 text-sm"
+                      onKeyDown={e => e.key === 'Enter' && applyPromo()}
+                    />
+                    <button onClick={applyPromo} disabled={promoLoading} className="btn-dark px-4 py-2 text-sm">
+                      {promoLoading ? '…' : 'OK'}
+                    </button>
+                  </div>
+                )}
+                {promoError && <p className="mt-1 text-xs text-red-500">{promoError}</p>}
               </div>
             </section>
             {error && <Alert>{error}</Alert>}

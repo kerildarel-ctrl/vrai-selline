@@ -12,6 +12,7 @@ import { MobileBar } from '../components/PageHeader'
 import { useAsync } from '../hooks/useAsync'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
+import { useRecentlyViewed } from '../hooks/useRecentlyViewed'
 import { api } from '../lib/api'
 import { formatPrice } from '../lib/format'
 import type { Product } from '../lib/types'
@@ -21,6 +22,7 @@ export default function ProductDetail() {
   const navigate = useNavigate()
   const { add } = useCart()
   const { user } = useAuth()
+  const { track } = useRecentlyViewed()
   const [contacting, setContacting] = useState(false)
   const { data: product, error, loading, reload } = useAsync(() => api.product(id), [id])
   const [active, setActive] = useState(0)
@@ -29,6 +31,9 @@ export default function ProductDetail() {
   const [copied, setCopied] = useState(false)
   const [zoomOpen, setZoomOpen] = useState(false)
   const [similar, setSimilar] = useState<Product[]>([])
+
+  // Tracker le produit vu
+  useEffect(() => { if (product?.id) track(product.id) }, [product?.id])
 
   useEffect(() => {
     if (!product?.category?.id) {
