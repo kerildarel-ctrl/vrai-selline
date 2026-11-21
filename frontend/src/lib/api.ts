@@ -112,6 +112,7 @@ export const api = {
     addressId: string
     paymentMethod: PaymentMethod
     paymentPhone?: string
+    promoCode?: string
   }) => post<Order>('/orders', b),
   orders: () => get<Order[]>('/orders'),
   order: (id: string) => get<Order>(`/orders/${id}`),
