@@ -55,7 +55,6 @@ export function authRoutes(ctx) {
     const ok = await bcrypt.compare(b.password, row?.password_hash ?? DUMMY_HASH)
     if (!row || !ok) throw new HttpError(401, 'E-mail ou mot de passe incorrect.')
     if (row.blocked) throw new HttpError(403, 'Ce compte a été suspendu. Contactez le support Selline.')
-    if (!row.email_verified) throw new HttpError(403, 'EMAIL_NOT_VERIFIED')
     res.json({ token: signToken(config, row.id), user: await loadUser(db, row.id) })
   })
 
