@@ -7,7 +7,7 @@ interface AuthState {
   user: User | null
   loading: boolean
   login: (email: string, password: string) => Promise<User>
-  register: (b: Parameters<typeof api.register>[0]) => Promise<{ message: string }>
+  register: (b: Parameters<typeof api.register>[0]) => Promise<User>
   logout: () => void
   setUser: (u: User | null) => void
   refresh: () => Promise<void>
@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     loading,
     login: async (email, password) => accept(await api.login({ email, password })),
-    register: async (b) => api.register(b),
+    register: async (b) => accept(await api.register(b) as unknown as AuthResponse),
     logout: () => { tokenStore.clear(); setUser(null) },
     setUser,
     refresh,
